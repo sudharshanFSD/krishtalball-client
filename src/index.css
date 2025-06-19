@@ -1,0 +1,20 @@
+/* Remove default browser spacing */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* Ant Layout wrapper fix */
+.ant-layout {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

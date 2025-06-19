@@ -24,6 +24,7 @@ const PurchasePage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState({ type: '', dates: [] });
+  const [showHistory, setShowHistory] = useState(false); 
 
   if (!user) return null;
 
@@ -41,22 +42,20 @@ const PurchasePage = () => {
       if (user.role === 'commander') {
         data.base = user.base;
       }
-
       const res = await axios.post('https://krishtalball.onrender.com/api/asset/purchase', data, {
         withCredentials: true,
       });
-
       return res.data;
     },
     onSuccess: () => {
-      message.success(' Asset purchased successfully!');
+      message.success('✅ Asset purchased successfully!');
       reset();
       queryClient.invalidateQueries(['purchases']);
     },
     onError: (error) => {
       const errorMessage =
         error?.response?.data?.message || error?.message || 'Purchase failed.';
-      message.error(errorMessage);
+      message.error('error ' + errorMessage);
     },
   });
 
@@ -78,21 +77,19 @@ const PurchasePage = () => {
         params.startDate = dayjs(dates[0]).toISOString();
         params.endDate = dayjs(dates[1]).toISOString();
       }
-
       const res = await axios.get('https://krishtalball.onrender.com/api/asset/purchase', {
         params,
         withCredentials: true,
       });
-
       return res.data;
     },
   });
 
   useEffect(() => {
-    if (!isLoading && Array.isArray(purchases) && purchases.length === 0) {
+    if (!isLoading && Array.isArray(purchases) && purchases.length === 0 && showHistory) {
       message.info('ℹ️ No purchases found for selected filters.');
     }
-  }, [purchases, isLoading]);
+  }, [purchases, isLoading, showHistory]);
 
   const handleFilterChange = (changed) => {
     setFilters((prev) => ({ ...prev, ...changed }));
@@ -101,7 +98,7 @@ const PurchasePage = () => {
   return (
     <div className="p-6 space-y-6">
       {(user.role === 'admin' || user.role === 'commander') && (
-        <Card title="🛒 Add New Purchase" bordered className="shadow-md">
+        <Card title="🛒 Add New Purchase" bordered className="shadow-md" style={{ borderRadius: 12 }}>
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
             <Row gutter={16}>
               <Col xs={24} sm={12} md={8}>
@@ -174,47 +171,59 @@ const PurchasePage = () => {
         </Card>
       )}
 
-      <Card
-        title="📜 Purchase History"
-        bordered
-        className="shadow-md"
-        extra={
-          <Space>
-            <Select
-              placeholder="Filter by Type"
-              allowClear
-              style={{ width: 160 }}
-              onChange={(val) => handleFilterChange({ type: val })}
-            >
-              <Select.Option value="weapon">weapon</Select.Option>
-              <Select.Option value="vehicle">vehicle</Select.Option>
-              <Select.Option value="ammo">ammo</Select.Option>
-            </Select>
-            <RangePicker
-              onChange={(dates) => handleFilterChange({ dates })}
-              style={{ width: 250 }}
-            />
-          </Space>
-        }
+      {/* Toggle Button for Purchase History */}
+      <Button
+        type="default"
+        onClick={() => setShowHistory(!showHistory)}
+        style={{ marginTop: 8 }}
       >
-        <Table
-          loading={isLoading}
-          dataSource={Array.isArray(purchases) ? purchases : []}
-          rowKey="_id"
-          pagination={{ pageSize: 5 }}
-          columns={[
-            { title: 'Name', dataIndex: 'name' },
-            { title: 'Type', dataIndex: 'type' },
-            { title: 'Quantity', dataIndex: 'quantity' },
-            { title: 'Base', dataIndex: 'base' },
-            {
-              title: 'Date',
-              dataIndex: 'createdAt',
-              render: (text) => dayjs(text).format('DD MMM YYYY'),
-            },
-          ]}
-        />
-      </Card>
+        {showHistory ? 'Hide History' : 'Show History'}
+      </Button>
+
+      {showHistory && (
+        <Card
+          title="📜 Purchase History"
+          bordered
+          className="shadow-md"
+          style={{ borderRadius: 12, marginTop: 12 }}
+          extra={
+            <Space>
+              <Select
+                placeholder="Filter by Type"
+                allowClear
+                style={{ width: 160 }}
+                onChange={(val) => handleFilterChange({ type: val })}
+              >
+                <Select.Option value="weapon">weapon</Select.Option>
+                <Select.Option value="vehicle">vehicle</Select.Option>
+                <Select.Option value="ammo">ammo</Select.Option>
+              </Select>
+              <RangePicker
+                onChange={(dates) => handleFilterChange({ dates })}
+                style={{ width: 250 }}
+              />
+            </Space>
+          }
+        >
+          <Table
+            loading={isLoading}
+            dataSource={Array.isArray(purchases) ? purchases : []}
+            rowKey="_id"
+            pagination={{ pageSize: 5 }}
+            columns={[
+              { title: 'Name', dataIndex: 'name' },
+              { title: 'Type', dataIndex: 'type' },
+              { title: 'Quantity', dataIndex: 'quantity' },
+              { title: 'Base', dataIndex: 'base' },
+              {
+                title: 'Date',
+                dataIndex: 'createdAt',
+                render: (text) => dayjs(text).format('DD MMM YYYY'),
+              },
+            ]}
+          />
+        </Card>
+      )}
     </div>
   );
 };

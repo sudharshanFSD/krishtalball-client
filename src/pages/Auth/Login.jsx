@@ -38,12 +38,17 @@ const LoginPage = () => {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(to right, #1f1f1f, #333)',
+        position: 'relative',
+        height: '100vh',
+        overflow: 'hidden',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '16px',
+        backgroundImage: `url("/sol.jpg")`, 
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     >
       <Card
@@ -53,7 +58,7 @@ const LoginPage = () => {
           padding: '32px',
           borderRadius: '12px',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-          backgroundColor: '#fff',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -62,23 +67,10 @@ const LoginPage = () => {
         </div>
 
         {errorMsg && (
-          <Alert
-            message={errorMsg}
-            type="error"
-            showIcon
-            closable
-            style={{ marginBottom: '16px' }}
-          />
+          <Alert message={errorMsg} type="error" showIcon closable style={{ marginBottom: '16px' }} />
         )}
-
         {successMsg && (
-          <Alert
-            message={successMsg}
-            type="success"
-            showIcon
-            closable
-            style={{ marginBottom: '16px' }}
-          />
+          <Alert message={successMsg} type="success" showIcon closable style={{ marginBottom: '16px' }} />
         )}
 
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
@@ -88,11 +80,7 @@ const LoginPage = () => {
               control={control}
               rules={{ required: 'Email is required' }}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder="Enter your email"
-                />
+                <Input {...field} type="email" placeholder="Enter your email" />
               )}
             />
           </Form.Item>
@@ -103,10 +91,7 @@ const LoginPage = () => {
               control={control}
               rules={{ required: 'Password is required' }}
               render={({ field }) => (
-                <Input.Password
-                  {...field}
-                  placeholder="Enter your password"
-                />
+                <Input.Password {...field} placeholder="Enter your password" />
               )}
             />
           </Form.Item>
@@ -117,7 +102,6 @@ const LoginPage = () => {
             </Button>
           </Form.Item>
 
-          {/* Register link */}
           <div style={{ textAlign: 'center', marginTop: '16px' }}>
             <Text>Don't have an account? </Text>
             <a onClick={() => navigate('/register')} style={{ color: '#1890ff' }}>

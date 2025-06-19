@@ -19,11 +19,11 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-const handleLogout = async () => {
-  await axios.post('https://krishtalball.onrender.com/api/auth/logout', {}, { withCredentials: true });
-  logout();
-  navigate('/');
-};
+  const handleLogout = async () => {
+    await axios.post('https://krishtalball.onrender.com/api/auth/logout', {}, { withCredentials: true });
+    logout();
+    navigate('/');
+  };
 
   const profileMenu = (
     <Menu>
@@ -39,7 +39,11 @@ const handleLogout = async () => {
 
   return (
     <Layout style={{ height: '100vh', overflow: 'hidden' }}>
-      <Sider breakpoint="lg" collapsedWidth="0">
+      <Sider
+        breakpoint="lg"
+        collapsedWidth="0"
+        style={{ height: '100vh', overflow: 'auto' }}
+      >
         <div style={{ color: 'white', padding: '20px', fontWeight: 'bold', fontSize: '18px' }}>
           🛡️ MAMS
         </div>
@@ -62,7 +66,7 @@ const handleLogout = async () => {
         </Menu>
       </Sider>
 
-      <Layout>
+      <Layout style={{ height: '100vh' }}>
         <Header
           style={{
             background: '#fff',
@@ -86,7 +90,6 @@ const handleLogout = async () => {
             background: '#fff',
             overflowY: 'auto',
             height: 'calc(100vh - 64px)',
-            minHeight: 0,
           }}
         >
           <Outlet />

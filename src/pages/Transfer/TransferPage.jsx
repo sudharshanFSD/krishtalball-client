@@ -12,6 +12,7 @@ import {
   Col,
   message,
   Divider,
+  Alert,
 } from 'antd';
 
 import dayjs from 'dayjs';
@@ -25,6 +26,8 @@ const TransferPage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState({ type: '', dates: [] });
+  const [formError, setFormError] = useState('');
+  const [showHistory, setShowHistory] = useState(false); // Toggle state
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -36,7 +39,7 @@ const TransferPage = () => {
     },
   });
 
-  const { data: filterOptions, isLoading: loadingFilters } = useQuery({
+  const { data: filterOptions = {}, isLoading: loadingFilters } = useQuery({
     queryKey: ['assetFilters'],
     queryFn: async () => {
       const res = await axios.get('https://krishtalball.onrender.com/api/asset/filters', {
@@ -54,12 +57,15 @@ const TransferPage = () => {
       return res.data;
     },
     onSuccess: () => {
+      setFormError('');
       message.success('Transfer successful');
       reset();
       queryClient.invalidateQueries(['transfers']);
     },
     onError: (error) => {
-      message.error('Failed to transfer: ' + (error.response?.data?.message || error.message));
+      const msg = error?.response?.data?.message || error.message || 'Transfer failed.';
+      setFormError(msg);
+      message.error('Transfer failed: ' + msg);
     },
   });
 
@@ -92,12 +98,16 @@ const TransferPage = () => {
     };
 
     if (!formData.name || !formData.quantity || !formData.type || !formData.toBase) {
-      message.error('Please fill in all required fields');
+      const errMsg = 'Please fill in all required fields';
+      setFormError(errMsg);
+      message.error(errMsg);
       return;
     }
 
     if (user?.role !== 'admin' && !formData.fromBase) {
-      message.error('From base is required');
+      const errMsg = 'From base is required';
+      setFormError(errMsg);
+      message.error(errMsg);
       return;
     }
 
@@ -105,15 +115,26 @@ const TransferPage = () => {
   };
 
   const onError = () => {
-    message.error('Please fix the form errors before submitting');
+    const errMsg = 'Please fix the form errors before submitting';
+    setFormError(errMsg);
+    message.error(errMsg);
   };
 
   return (
     <div className="p-6 space-y-6">
-
-      {/* Restrict Transfer Form for Logistics */}
       {user?.role !== 'logistics' && (
         <Card title="📦 Transfer Asset" bordered={false} style={{ borderRadius: 12 }}>
+          {formError && (
+            <Alert
+              message="Error"
+              description={formError}
+              type="error"
+              showIcon
+              closable
+              onClose={() => setFormError('')}
+              style={{ marginBottom: 16 }}
+            />
+          )}
           <Form layout="vertical" onFinish={handleSubmit(onSubmit, onError)}>
             <Row gutter={16}>
               <Col span={12}>
@@ -124,7 +145,6 @@ const TransferPage = () => {
                   render={({ field, fieldState }) => (
                     <Form.Item
                       label="Asset Name"
-                      required
                       validateStatus={fieldState.invalid ? 'error' : ''}
                       help={fieldState.error?.message}
                     >
@@ -146,7 +166,6 @@ const TransferPage = () => {
                   render={({ field, fieldState }) => (
                     <Form.Item
                       label="Quantity"
-                      required
                       validateStatus={fieldState.invalid ? 'error' : ''}
                       help={fieldState.error?.message}
                     >
@@ -164,7 +183,6 @@ const TransferPage = () => {
                   render={({ field, fieldState }) => (
                     <Form.Item
                       label="Asset Type"
-                      required
                       validateStatus={fieldState.invalid ? 'error' : ''}
                       help={fieldState.error?.message}
                     >
@@ -188,7 +206,6 @@ const TransferPage = () => {
                     render={({ field, fieldState }) => (
                       <Form.Item
                         label="From Base"
-                        required
                         validateStatus={fieldState.invalid ? 'error' : ''}
                         help={fieldState.error?.message}
                       >
@@ -196,10 +213,7 @@ const TransferPage = () => {
                           {...field}
                           placeholder="Select source base"
                           loading={loadingFilters}
-                          options={filterOptions?.bases?.map((b) => ({
-                            label: b,
-                            value: b,
-                          }))}
+                          options={filterOptions?.bases?.map((b) => ({ label: b, value: b }))}
                         />
                       </Form.Item>
                     )}
@@ -215,7 +229,6 @@ const TransferPage = () => {
                   render={({ field, fieldState }) => (
                     <Form.Item
                       label="To Base"
-                      required
                       validateStatus={fieldState.invalid ? 'error' : ''}
                       help={fieldState.error?.message}
                     >
@@ -223,10 +236,7 @@ const TransferPage = () => {
                         {...field}
                         placeholder="Select destination base"
                         loading={loadingFilters}
-                        options={filterOptions?.bases?.map((b) => ({
-                          label: b,
-                          value: b,
-                        }))}
+                        options={filterOptions?.bases?.map((b) => ({ label: b, value: b }))}
                       />
                     </Form.Item>
                   )}
@@ -250,54 +260,64 @@ const TransferPage = () => {
         </Card>
       )}
 
-      {/* History is visible to all */}
-      <Card title="📜 Transfer History" bordered={false} style={{ borderRadius: 12 }}>
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col>
-            <Select
-              placeholder="Filter by Type"
-              allowClear
-              style={{ width: 160 }}
-              onChange={(val) => handleFilterChange({ type: val })}
-              loading={loadingFilters}
-              options={filterOptions?.types?.map((t) => ({ label: t, value: t }))}
-            />
-          </Col>
-          <Col>
-            <RangePicker
-              onChange={(dates) => handleFilterChange({ dates })}
-              style={{ width: 250 }}
-            />
-          </Col>
+      {/* Toggle Button */}
+      <Button
+        type="default"
+        onClick={() => setShowHistory(!showHistory)}
+        style={{ marginTop: 8 }}
+      >
+        {showHistory ? 'Hide History' : 'Show History'}
+      </Button>
 
-        </Row>
+      {/* Transfer History Table */}
+      {showHistory && (
+        <Card title="📜 Transfer History" bordered={false} style={{ borderRadius: 12, marginTop: 12 }}>
+          <Row gutter={16} style={{ marginBottom: 16 }}>
+            <Col>
+              <Select
+                placeholder="Filter by Type"
+                allowClear
+                style={{ width: 160 }}
+                onChange={(val) => handleFilterChange({ type: val })}
+                loading={loadingFilters}
+                options={filterOptions?.types?.map((t) => ({ label: t, value: t }))}
+              />
+            </Col>
+            <Col>
+              <RangePicker
+                onChange={(dates) => handleFilterChange({ dates })}
+                style={{ width: 250 }}
+              />
+            </Col>
+          </Row>
 
-        <Divider />
+          <Divider />
 
-        <Table
-          loading={isLoading}
-          dataSource={transfers}
-          rowKey="_id"
-          pagination={{ pageSize: 5 }}
-          columns={[
-            { title: 'Name', dataIndex: 'assetName' },
-            { title: 'Type', dataIndex: 'type' },
-            { title: 'Quantity', dataIndex: 'quantity' },
-            { title: 'From Base', dataIndex: 'fromBase' },
-            { title: 'To Base', dataIndex: 'toBase' },
-            {
-              title: 'Transferred By',
-              dataIndex: 'transferredBy',
-              render: (user) => `${user?.name} (${user?.email})`,
-            },
-            {
-              title: 'Date',
-              dataIndex: 'createdAt',
-              render: (text) => dayjs(text).format('DD MMM YYYY'),
-            },
-          ]}
-        />
-      </Card>
+          <Table
+            loading={isLoading}
+            dataSource={transfers}
+            rowKey="_id"
+            pagination={{ pageSize: 5 }}
+            columns={[
+              { title: 'Name', dataIndex: 'assetName' },
+              { title: 'Type', dataIndex: 'type' },
+              { title: 'Quantity', dataIndex: 'quantity' },
+              { title: 'From Base', dataIndex: 'fromBase' },
+              { title: 'To Base', dataIndex: 'toBase' },
+              {
+                title: 'Transferred By',
+                dataIndex: 'transferredBy',
+                render: (user) => `${user?.name} (${user?.email})`,
+              },
+              {
+                title: 'Date',
+                dataIndex: 'createdAt',
+                render: (text) => dayjs(text).format('DD MMM YYYY'),
+              },
+            ]}
+          />
+        </Card>
+      )}
     </div>
   );
 };

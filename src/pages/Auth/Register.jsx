@@ -30,7 +30,7 @@ const RegisterPage = () => {
         withCredentials: true,
       });
       const { user } = res.data;
-      login(user); 
+      login(user);
       message.success("Registration successful!");
       navigate("/dashboard");
     } catch (err) {
@@ -43,14 +43,19 @@ const RegisterPage = () => {
   return (
     <div
       style={{
+        position: "relative",
         minHeight: "100vh",
-        background: "linear-gradient(to right, #1f1f1f, #333)",
+        overflow: "hidden",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         padding: "16px",
+        backgroundImage: `url("/shoot.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
+      {/* Registration Card */}
       <Card
         style={{
           width: "100%",
@@ -58,7 +63,7 @@ const RegisterPage = () => {
           padding: "32px",
           borderRadius: "12px",
           boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
-          backgroundColor: "#fff",
+          backgroundColor: "rgba(255, 255, 255, 0.92)",
         }}
       >
         <div style={{ textAlign: "center", marginBottom: "24px" }}>

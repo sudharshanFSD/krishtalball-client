@@ -26,10 +26,11 @@ const ExpenditurePage = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState({ type: '', dates: [] });
+  const [showHistory, setShowHistory] = useState(false); 
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // FORBIDDEN PAGE FOR LOGISTICS
+  //  FORBIDDEN FOR LOGISTICS
   if (user?.role === 'logistics') {
     return (
       <Result
@@ -97,11 +98,10 @@ const ExpenditurePage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Record Expenditure Form */}
+      {/* ➕ Record Expenditure Form */}
       <Card title="💰 Record Expenditure" bordered={false} style={{ borderRadius: 12 }}>
         <Form layout="vertical" onFinish={handleSubmit(mutation.mutate)}>
           <Row gutter={16}>
-            {/* Asset Name */}
             <Col span={12}>
               <Controller
                 name="name"
@@ -120,7 +120,6 @@ const ExpenditurePage = () => {
               />
             </Col>
 
-            {/* Quantity */}
             <Col span={12}>
               <Controller
                 name="quantity"
@@ -142,7 +141,6 @@ const ExpenditurePage = () => {
               />
             </Col>
 
-            {/* Type */}
             <Col span={12}>
               <Controller
                 name="type"
@@ -166,7 +164,6 @@ const ExpenditurePage = () => {
               />
             </Col>
 
-            {/* Base (Admin Only) */}
             {user?.role === 'admin' && (
               <Col span={12}>
                 <Controller
@@ -203,52 +200,63 @@ const ExpenditurePage = () => {
         </Form>
       </Card>
 
-      {/* History Table */}
-      <Card title="📊 Expenditure History" bordered={false} style={{ borderRadius: 12 }}>
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col>
-            <Select
-              placeholder="Filter by Type"
-              allowClear
-              style={{ width: 160 }}
-              onChange={(val) => handleFilterChange({ type: val })}
-              loading={loadingFilters}
-              options={filterOptions?.types?.map((t) => ({ label: t, value: t }))}
-            />
-          </Col>
-          <Col>
-            <RangePicker
-              onChange={(dates) => handleFilterChange({ dates })}
-              style={{ width: 250 }}
-            />
-          </Col>
-        </Row>
+      {/* Toggle Button */}
+      <Button
+        type="default"
+        onClick={() => setShowHistory(!showHistory)}
+        style={{ marginTop: 8 }}
+      >
+        {showHistory ? ' Hide History' : ' Show History'}
+      </Button>
 
-        <Divider />
+      {/*  History Table */}
+      {showHistory && (
+        <Card title="📊 Expenditure History" bordered={false} style={{ borderRadius: 12 }}>
+          <Row gutter={16} style={{ marginBottom: 16 }}>
+            <Col>
+              <Select
+                placeholder="Filter by Type"
+                allowClear
+                style={{ width: 160 }}
+                onChange={(val) => handleFilterChange({ type: val })}
+                loading={loadingFilters}
+                options={filterOptions?.types?.map((t) => ({ label: t, value: t }))}
+              />
+            </Col>
+            <Col>
+              <RangePicker
+                onChange={(dates) => handleFilterChange({ dates })}
+                style={{ width: 250 }}
+              />
+            </Col>
+          </Row>
 
-        <Table
-          loading={isLoading}
-          dataSource={expenditures}
-          rowKey="_id"
-          pagination={{ pageSize: 5 }}
-          columns={[
-            { title: 'Asset', dataIndex: 'assetName' },
-            { title: 'Type', dataIndex: 'type' },
-            { title: 'Quantity', dataIndex: 'quantity' },
-            { title: 'Base', dataIndex: 'base' },
-            {
-              title: 'Expended By',
-              dataIndex: 'expendedBy',
-              render: (user) => `${user?.name || 'User'} (${user?.email || '-'})`,
-            },
-            {
-              title: 'Date',
-              dataIndex: 'createdAt',
-              render: (text) => dayjs(text).format('DD MMM YYYY'),
-            },
-          ]}
-        />
-      </Card>
+          <Divider />
+
+          <Table
+            loading={isLoading}
+            dataSource={expenditures}
+            rowKey="_id"
+            pagination={{ pageSize: 5 }}
+            columns={[
+              { title: 'Asset', dataIndex: 'assetName' },
+              { title: 'Type', dataIndex: 'type' },
+              { title: 'Quantity', dataIndex: 'quantity' },
+              { title: 'Base', dataIndex: 'base' },
+              {
+                title: 'Expended By',
+                dataIndex: 'expendedBy',
+                render: (user) => `${user?.name || 'User'} (${user?.email || '-'})`,
+              },
+              {
+                title: 'Date',
+                dataIndex: 'createdAt',
+                render: (text) => dayjs(text).format('DD MMM YYYY'),
+              },
+            ]}
+          />
+        </Card>
+      )}
     </div>
   );
 };
