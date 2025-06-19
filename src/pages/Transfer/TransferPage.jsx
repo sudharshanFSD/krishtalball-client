@@ -39,7 +39,7 @@ const TransferPage = () => {
   const { data: filterOptions, isLoading: loadingFilters } = useQuery({
     queryKey: ['assetFilters'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/api/asset/filters', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/filters', {
         withCredentials: true,
       });
       return res.data;
@@ -48,7 +48,7 @@ const TransferPage = () => {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post('http://localhost:3000/api/assets/transfer', data, {
+      const res = await axios.post('https://krishtalball.onrender.com/api/assets/transfer', data, {
         withCredentials: true,
       });
       return res.data;
@@ -72,7 +72,7 @@ const TransferPage = () => {
         params.startDate = dayjs(filters.dates[0]).toISOString();
         params.endDate = dayjs(filters.dates[1]).toISOString();
       }
-      const res = await axios.get('http://localhost:3000/api/assets/transfer', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/assets/transfer', {
         params,
         withCredentials: true,
       });

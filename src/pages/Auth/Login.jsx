@@ -19,7 +19,7 @@ const LoginPage = () => {
     setErrorMsg(null);
     setSuccessMsg(null);
     try {
-      const res = await axios.post('http://localhost:3000/api/auth/login', data, {
+      const res = await axios.post('https://krishtalball.onrender.com/api/auth/login', data, {
         withCredentials: true,
       });
       const { user } = res.data;

@@ -42,7 +42,7 @@ const PurchasePage = () => {
         data.base = user.base;
       }
 
-      const res = await axios.post('http://localhost:3000/api/asset/purchase', data, {
+      const res = await axios.post('https://krishtalball.onrender.com/api/asset/purchase', data, {
         withCredentials: true,
       });
 
@@ -79,7 +79,7 @@ const PurchasePage = () => {
         params.endDate = dayjs(dates[1]).toISOString();
       }
 
-      const res = await axios.get('http://localhost:3000/api/asset/purchase', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/purchase', {
         params,
         withCredentials: true,
       });

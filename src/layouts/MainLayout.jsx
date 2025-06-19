@@ -20,7 +20,7 @@ const MainLayout = () => {
   const { user, logout } = useAuth();
 
 const handleLogout = async () => {
-  await axios.post('http://localhost:3000/api/auth/logout', {}, { withCredentials: true });
+  await axios.post('https://krishtalball.onrender.com/api/auth/logout', {}, { withCredentials: true });
   logout();
   navigate('/');
 };

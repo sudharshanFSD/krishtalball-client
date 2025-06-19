@@ -43,7 +43,7 @@ const ExpenditurePage = () => {
   const { data: filterOptions, isLoading: loadingFilters } = useQuery({
     queryKey: ['assetFilters'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/api/asset/filters', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/filters', {
         withCredentials: true,
       });
       return res.data;
@@ -59,7 +59,7 @@ const ExpenditurePage = () => {
         quantity: parseInt(data.quantity),
       };
 
-      const res = await axios.post('http://localhost:3000/api/asset/expend', payload, {
+      const res = await axios.post('https://krishtalball.onrender.com/api/asset/expend', payload, {
         withCredentials: true,
       });
       return res.data;
@@ -83,7 +83,7 @@ const ExpenditurePage = () => {
         params.startDate = dayjs(filters.dates[0]).toISOString();
         params.endDate = dayjs(filters.dates[1]).toISOString();
       }
-      const res = await axios.get('http://localhost:3000/api/asset/getExpenditures', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/getExpenditures', {
         params,
         withCredentials: true,
       });

@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/auth/me", {
+        const res = await axios.get("https://krishtalball.onrender.com/api/auth/me", {
           withCredentials: true,
         });
         setUser(res.data);

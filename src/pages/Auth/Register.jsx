@@ -26,7 +26,7 @@ const RegisterPage = () => {
   const onSubmit = async (data) => {
     setErrorMsg(null);
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/register", data, {
+      const res = await axios.post("https://krishtalball.onrender.com/api/auth/register", data, {
         withCredentials: true,
       });
       const { user } = res.data;

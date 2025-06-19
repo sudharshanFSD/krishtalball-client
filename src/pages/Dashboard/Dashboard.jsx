@@ -38,7 +38,7 @@ const Dashboard = () => {
       const params = {};
       if (filters.type) params.type = filters.type;
       if (user.role === 'admin' && filters.base) params.base = filters.base;
-      const res = await axios.get('http://localhost:3000/api/asset/summary', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/summary', {
         params,
         withCredentials: true,
       });
@@ -50,7 +50,7 @@ const Dashboard = () => {
   const { data: filterOptions, isLoading: loadingFilters } = useQuery({
     queryKey: ['assetFilters'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/api/asset/filters', {
+      const res = await axios.get('https://krishtalball.onrender.com/api/asset/filters', {
         withCredentials: true,
       });
       return res.data;
