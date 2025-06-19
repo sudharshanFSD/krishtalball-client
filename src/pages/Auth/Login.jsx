@@ -45,7 +45,7 @@ const LoginPage = () => {
         justifyContent: 'center',
         alignItems: 'center',
         padding: '16px',
-        backgroundImage: `url("/sol.jpg")`, 
+        backgroundImage: `url("/shoot.jpg")`, 
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
