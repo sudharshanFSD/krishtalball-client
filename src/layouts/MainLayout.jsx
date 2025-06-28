@@ -45,7 +45,7 @@ const MainLayout = () => {
         style={{ height: '100vh', overflow: 'auto' }}
       >
         <div style={{ color: 'white', padding: '20px', fontWeight: 'bold', fontSize: '18px' }}>
-          🛡️ MAMS
+           MAMS
         </div>
         <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
           <Menu.Item key="/dashboard" icon={<DashboardOutlined />}>

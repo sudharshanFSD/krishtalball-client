@@ -27,7 +27,7 @@ const AssignmentPage = () => {
   const queryClient = useQueryClient();
   const [formError, setFormError] = useState('');
   const [filters, setFilters] = useState({ type: '', dates: [] });
-  const [showHistory, setShowHistory] = useState(false); // 👈 Show/Hide toggle
+  const [showHistory, setShowHistory] = useState(false); 
 
   const { control, handleSubmit, reset } = useForm();
 
@@ -58,13 +58,13 @@ const AssignmentPage = () => {
     },
     onSuccess: () => {
       setFormError('');
-      message.success('✅ Asset assigned');
+      message.success('Asset assigned');
       reset();
       queryClient.invalidateQueries(['assignments']);
     },
     onError: (error) => {
       const msg = error?.response?.data?.message || error.message || 'Assignment failed.';
-      message.error('❌ ' + msg);
+      message.error(' oops! ' + msg);
       setFormError(msg);
       console.error('Assignment error:', error);
     },
@@ -106,7 +106,7 @@ const AssignmentPage = () => {
   return (
     <div className="p-6 space-y-6" style={{ overflowX: 'hidden' }}>
       {(user.role === 'admin' || user.role === 'commander') && (
-        <Card title="📋 Assign Asset" bordered={false} style={{ borderRadius: 12 }}>
+        <Card title=" Assign Asset" bordered={false} style={{ borderRadius: 12 }}>
           <Form layout="vertical" onFinish={handleSubmit(mutation.mutate)}>
             {formError && (
               <Alert
@@ -242,7 +242,7 @@ const AssignmentPage = () => {
 
       {/* Assignment History Table */}
       {showHistory && (
-        <Card title="📦 Assignment History" bordered={false} style={{ borderRadius: 12, marginTop: 12 }}>
+        <Card title="Assignment History" bordered={false} style={{ borderRadius: 12, marginTop: 12 }}>
           <Space style={{ marginBottom: 16 }}>
             <Select
               placeholder="Filter by Type"

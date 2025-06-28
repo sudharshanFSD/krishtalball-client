@@ -48,7 +48,7 @@ const PurchasePage = () => {
       return res.data;
     },
     onSuccess: () => {
-      message.success('✅ Asset purchased successfully!');
+      message.success(' Asset purchased successfully!');
       reset();
       queryClient.invalidateQueries(['purchases']);
     },
@@ -87,7 +87,7 @@ const PurchasePage = () => {
 
   useEffect(() => {
     if (!isLoading && Array.isArray(purchases) && purchases.length === 0 && showHistory) {
-      message.info('ℹ️ No purchases found for selected filters.');
+      message.info('ℹ No purchases found for selected filters.');
     }
   }, [purchases, isLoading, showHistory]);
 
@@ -98,7 +98,7 @@ const PurchasePage = () => {
   return (
     <div className="p-6 space-y-6">
       {(user.role === 'admin' || user.role === 'commander') && (
-        <Card title="🛒 Add New Purchase" bordered className="shadow-md" style={{ borderRadius: 12 }}>
+        <Card title=" Add New Purchase" bordered className="shadow-md" style={{ borderRadius: 12 }}>
           <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
             <Row gutter={16}>
               <Col xs={24} sm={12} md={8}>
@@ -182,7 +182,7 @@ const PurchasePage = () => {
 
       {showHistory && (
         <Card
-          title="📜 Purchase History"
+          title=" Purchase History"
           bordered
           className="shadow-md"
           style={{ borderRadius: 12, marginTop: 12 }}

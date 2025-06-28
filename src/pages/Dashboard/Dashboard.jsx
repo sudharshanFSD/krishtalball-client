@@ -68,7 +68,7 @@ const Dashboard = () => {
 
   return (
     <div style={{ padding: '32px' }}>
-      <Title level={3}>📊 Military Asset Dashboard</Title>
+      <Title level={3}> Military Asset Dashboard</Title>
 
       {/* Filters */}
       <Space wrap size="middle" style={{ marginBottom: 32 }}>
@@ -152,7 +152,7 @@ const Dashboard = () => {
 
       {/* Modal: Movement Breakdown */}
       <Modal
-        title="🧾 Movement Breakdown"
+        title=" Movement Breakdown"
         open={movementVisible}
         onCancel={() => setMovementVisible(false)}
         footer={null}

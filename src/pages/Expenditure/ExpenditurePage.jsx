@@ -98,8 +98,8 @@ const ExpenditurePage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* ➕ Record Expenditure Form */}
-      <Card title="💰 Record Expenditure" bordered={false} style={{ borderRadius: 12 }}>
+      {/* Record Expenditure Form */}
+      <Card title=" Record Expenditure" bordered={false} style={{ borderRadius: 12 }}>
         <Form layout="vertical" onFinish={handleSubmit(mutation.mutate)}>
           <Row gutter={16}>
             <Col span={12}>
@@ -211,7 +211,7 @@ const ExpenditurePage = () => {
 
       {/*  History Table */}
       {showHistory && (
-        <Card title="📊 Expenditure History" bordered={false} style={{ borderRadius: 12 }}>
+        <Card title="Expenditure History" bordered={false} style={{ borderRadius: 12 }}>
           <Row gutter={16} style={{ marginBottom: 16 }}>
             <Col>
               <Select
