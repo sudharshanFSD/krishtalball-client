@@ -123,7 +123,7 @@ const TransferPage = () => {
   return (
     <div className="p-6 space-y-6">
       {user?.role !== 'logistics' && (
-        <Card title="📦 Transfer Asset" bordered={false} style={{ borderRadius: 12 }}>
+        <Card title=" Transfer Assets" bordered={false} style={{ borderRadius: 12 }}>
           {formError && (
             <Alert
               message="Error"
@@ -271,7 +271,7 @@ const TransferPage = () => {
 
       {/* Transfer History Table */}
       {showHistory && (
-        <Card title="📜 Transfer History" bordered={false} style={{ borderRadius: 12, marginTop: 12 }}>
+        <Card title="Transfer History" bordered={false} style={{ borderRadius: 12, marginTop: 12 }}>
           <Row gutter={16} style={{ marginBottom: 16 }}>
             <Col>
               <Select
@@ -298,12 +298,14 @@ const TransferPage = () => {
             dataSource={transfers}
             rowKey="_id"
             pagination={{ pageSize: 5 }}
+
             columns={[
               { title: 'Name', dataIndex: 'assetName' },
               { title: 'Type', dataIndex: 'type' },
               { title: 'Quantity', dataIndex: 'quantity' },
               { title: 'From Base', dataIndex: 'fromBase' },
-              { title: 'To Base', dataIndex: 'toBase' },
+              { title: 'To Bsse',dataIndex:'toBase'},
+
               {
                 title: 'Transferred By',
                 dataIndex: 'transferredBy',
